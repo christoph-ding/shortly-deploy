@@ -2,7 +2,13 @@ module.exports = function(grunt) {
 
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
+    
     concat: {
+      js: {
+        src:   [ 'public/**/*.js'],
+        dest: 'public/dist/concat.js',
+        options: { seperator: ';'}
+      }
     },
 
     mochaTest: {
@@ -21,16 +27,20 @@ module.exports = function(grunt) {
     },
 
     uglify: {
+      my_target: {
+        files: {
+          'public/dist/ugly_concat.js': ['public/dist/concat.js']        
+        }
+      }      
     },
 
     jshint: {
-      files: [
-        // Add filespec list here
-      ],
+      files: ['../deploy/**/*.js'],
       options: {
         force: 'true',
         jshintrc: '.jshintrc',
         ignores: [
+          'node_modules/**/*.js',
           'public/lib/**/*.js',
           'public/dist/**/*.js'
         ]
@@ -89,12 +99,16 @@ module.exports = function(grunt) {
   ////////////////////////////////////////////////////
   // Main grunt tasks
   ////////////////////////////////////////////////////
+  grunt.registerTask('JSHint', [
+    'jshint'
+  ]);
 
   grunt.registerTask('test', [
     'mochaTest'
   ]);
 
   grunt.registerTask('build', [
+      grunt.task.run([ 'concat', 'uglify' ])
   ]);
 
   grunt.registerTask('upload', function(n) {
@@ -107,6 +121,7 @@ module.exports = function(grunt) {
 
   grunt.registerTask('deploy', [
       // add your production server task here
+    'JSHint', 'build', 'upload'
   ]);
 
 
