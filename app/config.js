@@ -1,36 +1,21 @@
 var Mongoose = require('mongoose');
 var path = require('path');
+var bcrypt = require('bcrypt-nodejs');
 
-var db = Mongoose.connect('mongodb://localhost/shortly', {
-  user: 'your_database_user',
-  pass: 'password'
-})
 
-var Schema = Mongoose.Schema;
-
-db.urls = new Schema({
-  url : String,
-  base_url: String,
-  code: String,
-  title: String,
-  visits: Number,
-  date: {type: Date, default: Date.now}
-}
-
-db.users = new Schema({
-  username: String,
-  password: String
-});
-
-db.users.pre('save', function() {
-  var user = this;
-    bcrypt.hash(user.password, null, null, function(err, hash){
-      if(err) {
-        console.log(err);      
-      } else {
-        user.password = hash;
-    }
-  })  
-}
+var db = Mongoose.connect('mongodb://127.0.0.1/shortly');
+  // db.on('error', console.error.bind(console, 'connection error:'));
+  // db.once('open', function () {
+  //   console.log('connected');
+  // });
+ 
+// db.urls = new Schema({
+//   url : String,
+//   base_url: String,
+//   code: String,
+//   title: String,
+//   visits: Number,
+//   date: {type: Date, default: Date.now}
+// });
 
 module.exports = db;

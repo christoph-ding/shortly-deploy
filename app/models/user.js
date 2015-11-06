@@ -1,8 +1,29 @@
 var db = require('../config');
 var bcrypt = require('bcrypt-nodejs');
 var Promise = require('bluebird');
+var Mongoose = require('mongoose');
 
-var User = Mongoose.model('User',db.users); 
+console.log('====================== USERS =====================')
+
+var Schema = Mongoose.Schema;
+
+var userSchema = new Schema({
+  username: {type: String, require: true},
+  password: {type: String, require: true}
+});
+
+userSchema.pre('save', function(next) {
+  bcrypt.hash(this.password, null, null, function(err, hash){
+    if(err) {
+      console.log(err);      
+    } else {
+      this.password = hash;
+    }
+  })  
+});
+
+
+var User = Mongoose.model('User',userSchema); 
 
 // var User = db.Model.extend({
 //   tableName: 'users',

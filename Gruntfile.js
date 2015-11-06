@@ -70,6 +70,7 @@ module.exports = function(grunt) {
 
     shell: {
       prodServer: {
+        command: 'mongod'
       }
     },
   });
@@ -119,10 +120,11 @@ module.exports = function(grunt) {
     }
   });
 
+  grunt.registerTask('startShell', ['shell']);
+
   grunt.registerTask('deploy', [
       // add your production server task here
-    'JSHint', 'build', 'upload'
-  ]);
+    'JSHint', 'build', 'shell', 'upload']);
 
 
 };
