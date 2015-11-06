@@ -13,17 +13,20 @@ var userSchema = new Schema({
 });
 
 userSchema.pre('save', function(next) {
-  bcrypt.hash(this.password, null, null, function(err, hash){
+  var user = this
+  bcrypt.hash(user.password, null, null, function(err, hash){
     if(err) {
       console.log(err);      
     } else {
-      this.password = hash;
+      user.password = hash;
+      next();
     }
   })  
 });
 
-
 var User = Mongoose.model('User',userSchema); 
+
+module.exports = User;
 
 // var User = db.Model.extend({
 //   tableName: 'users',
@@ -31,9 +34,6 @@ var User = Mongoose.model('User',userSchema);
 //   initialize: function(){
 //     this.on('creating', this.hashPassword);
 //   },
-//   comparePassword: function(attemptedPassword, callback) {
-//     bcrypt.compare(attemptedPassword, this.get('password'), function(err, isMatch) {
-//       callback(isMatch);
 //     });
 //   },
 //   hashPassword: function(){
@@ -45,14 +45,7 @@ var User = Mongoose.model('User',userSchema);
 //   }
 //});
 
-module.exports = User;
-
-
-
 /* 
   init + hashPassword is going to Schema pre hoo 
   compare password going to request - handler
-
-
-
 */
