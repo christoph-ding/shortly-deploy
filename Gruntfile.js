@@ -5,7 +5,7 @@ module.exports = function(grunt) {
     
     concat: {
       js: {
-        src:   [ 'public/**/*.js'],
+        src:   [ 'public/client/*.js'],
         dest: 'public/dist/concat.js',
         options: { seperator: ';'}
       }
@@ -29,20 +29,21 @@ module.exports = function(grunt) {
     uglify: {
       my_target: {
         files: {
-          'public/dist/ugly_concat.js': ['public/dist/concat.js']        
+          'public/dist/ugly_concat.js': ['public/dist/concat.js']
         }
       }      
     },
 
     jshint: {
-      files: ['../deploy/**/*.js'],
+      files: ['public/client/*.js'],
+      // files: ['public/dist/concat.js'],
+
       options: {
         force: 'true',
         jshintrc: '.jshintrc',
         ignores: [
           'node_modules/**/*.js',
-          'public/lib/**/*.js',
-          'public/dist/**/*.js'
+          'public/lib/**/*.js'
         ]
       }
     },
@@ -66,13 +67,13 @@ module.exports = function(grunt) {
         files: 'public/*.css',
         tasks: ['cssmin']
       }
-    },
+    }
 
-    shell: {
-      prodServer: {
-        command: 'mongod'
-      }
-    },
+    // shell: {
+    //   prodServer: {
+    //     command: 'mongod'
+    //   }
+    // },
   });
 
   grunt.loadNpmTasks('grunt-contrib-uglify');
@@ -120,11 +121,13 @@ module.exports = function(grunt) {
     }
   });
 
-  grunt.registerTask('startShell', ['shell']);
+  // grunt.registerTask('startShell', ['shell']);
 
   grunt.registerTask('deploy', [
       // add your production server task here
-    'JSHint', 'build', 'shell', 'upload']);
+    // 'jshint', 'build', 'shell', 'upload']);
+    'jshint', 'build', 'upload']);
+
 
 
 };
